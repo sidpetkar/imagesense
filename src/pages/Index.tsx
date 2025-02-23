@@ -9,7 +9,7 @@ const Index = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-zinc-50 to-zinc-100">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#F6F6F7] to-[#F1F0FB]">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -22,10 +22,10 @@ const Index = () => {
         >
           <Button
             onClick={() => setIsModalOpen(true)}
-            className="px-8 py-6 rounded-xl bg-white text-zinc-800 shadow-lg hover:shadow-xl transition-shadow duration-300 flex items-center gap-2 border border-zinc-200"
+            className="px-8 py-6 rounded-xl bg-[#9b87f5] text-white shadow-lg hover:shadow-xl hover:bg-[#7E69AB] transition-all duration-300 flex items-center gap-2"
           >
             <Plus className="w-5 h-5" />
-            <span className="text-lg">Upload Documents</span>
+            <span className="text-lg font-medium">Upload Documents</span>
           </Button>
         </motion.div>
         

@@ -41,7 +41,7 @@ const UploadModal = ({ onClose }: UploadModalProps) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50"
+      className="fixed inset-0 bg-[#1A1F2C]/40 backdrop-blur-sm flex items-center justify-center z-50"
       onClick={onClose}
     >
       <motion.div
@@ -49,29 +49,29 @@ const UploadModal = ({ onClose }: UploadModalProps) => {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="bg-white/90 backdrop-blur-xl p-8 rounded-2xl shadow-2xl w-full max-w-xl mx-4"
+        className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-xl mx-4"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-zinc-800">Upload Documents</h2>
+          <h2 className="text-2xl font-semibold text-[#1A1F2C]">Upload Documents</h2>
           <Button
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="rounded-full hover:bg-zinc-100"
+            className="rounded-full hover:bg-[#F1F0FB]"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 text-[#8E9196]" />
           </Button>
         </div>
 
         <motion.div
           className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
-            isDragging ? 'border-zinc-400 bg-zinc-50' : 'border-zinc-200'
+            isDragging ? 'border-[#9b87f5] bg-[#F1F0FB]' : 'border-[#E5DEFF]'
           }`}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          animate={{ borderColor: isDragging ? '#71717a' : '#e4e4e7' }}
+          animate={{ borderColor: isDragging ? '#9b87f5' : '#E5DEFF' }}
         >
           <input
             type="file"
@@ -81,17 +81,17 @@ const UploadModal = ({ onClose }: UploadModalProps) => {
             multiple
           />
           
-          <Upload className="w-10 h-10 mx-auto mb-4 text-zinc-400" />
-          <p className="text-zinc-600 mb-2">
+          <Upload className="w-10 h-10 mx-auto mb-4 text-[#9b87f5]" />
+          <p className="text-[#1A1F2C] mb-2">
             Drag and drop your documents here, or{' '}
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="text-zinc-800 underline underline-offset-4 hover:text-zinc-600"
+              className="text-[#9b87f5] underline underline-offset-4 hover:text-[#7E69AB]"
             >
               browse
             </button>
           </p>
-          <p className="text-sm text-zinc-400">Supported formats: PDF, DOC, DOCX</p>
+          <p className="text-sm text-[#8E9196]">Supported formats: PDF, DOC, DOCX</p>
         </motion.div>
 
         {files.length > 0 && (
@@ -106,11 +106,11 @@ const UploadModal = ({ onClose }: UploadModalProps) => {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="flex items-center gap-3 p-3 bg-zinc-50 rounded-lg"
+                className="flex items-center gap-3 p-3 bg-[#F1F0FB] rounded-lg"
               >
-                <File className="w-5 h-5 text-zinc-400" />
-                <span className="text-sm text-zinc-600 truncate">{file.name}</span>
-                <span className="text-xs text-zinc-400 ml-auto">
+                <File className="w-5 h-5 text-[#9b87f5]" />
+                <span className="text-sm text-[#1A1F2C] truncate">{file.name}</span>
+                <span className="text-xs text-[#8E9196] ml-auto">
                   {(file.size / 1024 / 1024).toFixed(2)} MB
                 </span>
               </motion.div>
@@ -122,7 +122,7 @@ const UploadModal = ({ onClose }: UploadModalProps) => {
           <Button
             variant="outline"
             onClick={onClose}
-            className="px-4 py-2 text-zinc-600 hover:text-zinc-800"
+            className="px-4 py-2 text-[#8E9196] hover:text-[#1A1F2C] border-[#E5DEFF] hover:bg-[#F1F0FB]"
           >
             Cancel
           </Button>
@@ -131,7 +131,7 @@ const UploadModal = ({ onClose }: UploadModalProps) => {
               // Handle upload logic here
               console.log('Uploading files:', files);
             }}
-            className="px-4 py-2 bg-zinc-800 text-white hover:bg-zinc-700"
+            className="px-4 py-2 bg-[#9b87f5] text-white hover:bg-[#7E69AB]"
             disabled={files.length === 0}
           >
             Upload {files.length > 0 && `(${files.length})`}
