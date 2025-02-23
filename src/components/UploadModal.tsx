@@ -49,10 +49,10 @@ const UploadModal = ({ onClose }: UploadModalProps) => {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-xl mx-4"
+        className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-xl mx-4 font-['Inter_Tight']"
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-8">
           <h2 className="text-2xl font-semibold text-[#1A1F2C]">Upload Documents</h2>
           <Button
             variant="ghost"
@@ -65,7 +65,7 @@ const UploadModal = ({ onClose }: UploadModalProps) => {
         </div>
 
         <motion.div
-          className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
+          className={`border-2 border-dashed rounded-xl p-10 text-center transition-colors ${
             isDragging ? 'border-[#9b87f5] bg-[#F1F0FB]' : 'border-[#E5DEFF]'
           }`}
           onDragOver={handleDragOver}
@@ -81,8 +81,8 @@ const UploadModal = ({ onClose }: UploadModalProps) => {
             multiple
           />
           
-          <Upload className="w-10 h-10 mx-auto mb-4 text-[#9b87f5]" />
-          <p className="text-[#1A1F2C] mb-2">
+          <Upload className="w-12 h-12 mx-auto mb-6 text-[#9b87f5]" />
+          <p className="text-[#1A1F2C] mb-3 text-lg">
             Drag and drop your documents here, or{' '}
             <button
               onClick={() => fileInputRef.current?.click()}
@@ -98,7 +98,7 @@ const UploadModal = ({ onClose }: UploadModalProps) => {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-6 space-y-2"
+            className="mt-8 space-y-3"
           >
             {files.map((file, index) => (
               <motion.div
@@ -106,7 +106,7 @@ const UploadModal = ({ onClose }: UploadModalProps) => {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="flex items-center gap-3 p-3 bg-[#F1F0FB] rounded-lg"
+                className="flex items-center gap-4 p-4 bg-[#F1F0FB] rounded-lg"
               >
                 <File className="w-5 h-5 text-[#9b87f5]" />
                 <span className="text-sm text-[#1A1F2C] truncate">{file.name}</span>
@@ -118,11 +118,11 @@ const UploadModal = ({ onClose }: UploadModalProps) => {
           </motion.div>
         )}
 
-        <div className="mt-6 flex justify-end gap-3">
+        <div className="mt-8 flex justify-end gap-4">
           <Button
             variant="outline"
             onClick={onClose}
-            className="px-4 py-2 text-[#8E9196] hover:text-[#1A1F2C] border-[#E5DEFF] hover:bg-[#F1F0FB]"
+            className="px-6 py-2.5 text-[#8E9196] hover:text-[#1A1F2C] border-[#E5DEFF] hover:bg-[#F1F0FB]"
           >
             Cancel
           </Button>
@@ -131,7 +131,7 @@ const UploadModal = ({ onClose }: UploadModalProps) => {
               // Handle upload logic here
               console.log('Uploading files:', files);
             }}
-            className="px-4 py-2 bg-[#9b87f5] text-white hover:bg-[#7E69AB]"
+            className="px-6 py-2.5 bg-[#9b87f5] text-white hover:bg-[#7E69AB]"
             disabled={files.length === 0}
           >
             Upload {files.length > 0 && `(${files.length})`}

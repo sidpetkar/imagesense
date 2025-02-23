@@ -14,7 +14,7 @@ const Index = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-center"
+        className="text-center font-['Inter_Tight']"
       >
         <motion.div
           whileHover={{ scale: 1.02 }}
