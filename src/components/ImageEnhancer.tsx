@@ -1,9 +1,9 @@
 
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { X, Upload, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { X, Upload, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { pipeline } from '@huggingface/transformers';
+import { supabase } from "@/integrations/supabase/client";
 
 interface ImageEnhancerProps {
   onClose: () => void;
@@ -43,21 +43,22 @@ const ImageEnhancer = ({ onClose }: ImageEnhancerProps) => {
   const processImage = async (file: File) => {
     setIsProcessing(true);
     try {
-      // Convert image to base64 for preview
+      // Convert image to base64 for preview and analysis
       const reader = new FileReader();
       reader.onloadend = async () => {
-        setImage(reader.result as string);
+        const base64Image = reader.result as string;
+        setImage(base64Image);
         
-        // Initialize the image classification pipeline
-        const classifier = await pipeline('image-classification', 'Xenova/vit-base-patch16-224');
-        const result = await classifier(reader.result as string);
-        
-        // Generate description from the classification results
-        if (result && result.length > 0) {
-          const description = result.map((r: any) => 
-            `${r.label} (${(r.score * 100).toFixed(1)}% confidence)`
-          ).join('\n');
-          setDescription(description);
+        try {
+          const { data, error } = await supabase.functions.invoke('analyze-image', {
+            body: { image: base64Image }
+          });
+
+          if (error) throw error;
+          setDescription(data.description);
+        } catch (error) {
+          console.error('Error analyzing image:', error);
+          setDescription('Error analyzing image. Please try again.');
         }
       };
       reader.readAsDataURL(file);
@@ -86,7 +87,7 @@ const ImageEnhancer = ({ onClose }: ImageEnhancerProps) => {
         onClick={e => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-semibold text-[#1A1F2C]">Enhance Image</h2>
+          <h2 className="text-2xl font-semibold text-[#1A1F2C]">Analyze Image</h2>
           <Button
             variant="ghost"
             size="icon"
@@ -144,7 +145,7 @@ const ImageEnhancer = ({ onClose }: ImageEnhancerProps) => {
               </div>
             ) : (
               <div className="bg-[#F1F0FB] rounded-xl p-6">
-                <h3 className="text-lg font-medium text-[#1A1F2C] mb-2">Image Analysis</h3>
+                <h3 className="text-lg font-medium text-[#1A1F2C] mb-2">Image Description</h3>
                 <p className="text-[#8E9196] whitespace-pre-line">{description}</p>
               </div>
             )}
