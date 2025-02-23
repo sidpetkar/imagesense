@@ -1,8 +1,8 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus } from 'lucide-react';
-import UploadModal from '@/components/UploadModal';
+import { Upload } from 'lucide-react';
+import ImageEnhancer from '@/components/ImageEnhancer';
 import { Button } from '@/components/ui/button';
 
 const Index = () => {
@@ -24,14 +24,14 @@ const Index = () => {
             onClick={() => setIsModalOpen(true)}
             className="px-8 py-6 rounded-xl bg-[#9b87f5] text-white shadow-lg hover:shadow-xl hover:bg-[#7E69AB] transition-all duration-300 flex items-center gap-2"
           >
-            <Plus className="w-5 h-5" />
-            <span className="text-lg font-medium">Upload Documents</span>
+            <Upload className="w-5 h-5" />
+            <span className="text-lg font-medium">Enhance Image</span>
           </Button>
         </motion.div>
         
         <AnimatePresence>
           {isModalOpen && (
-            <UploadModal onClose={() => setIsModalOpen(false)} />
+            <ImageEnhancer onClose={() => setIsModalOpen(false)} />
           )}
         </AnimatePresence>
       </motion.div>
