@@ -33,7 +33,7 @@ serve(async (req) => {
 
     console.log("Analyzing image with BLIP-3...")
     const output = await replicate.run(
-      "zsxkib/blip-3:b91c0f27a3da67d3f0dcb765537a46c48462775ad541ea671a7c1b46e15b00e6",
+      "zsxkib/blip-3:499bec581d8f64060fd695ec0c34d7595c6824c4118259aa8b0788e0d2d903e1",
       {
         input: {
           image: image,

@@ -1,9 +1,10 @@
 
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { X, Upload, Loader2, RotateCcw } from 'lucide-react';
+import { X, Upload, Loader2, RotateCcw, Copy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface ImageEnhancerProps {
   onClose: () => void;
@@ -14,7 +15,9 @@ const ImageEnhancer = ({ onClose }: ImageEnhancerProps) => {
   const [image, setImage] = useState<string | null>(null);
   const [description, setDescription] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isHoveringImage, setIsHoveringImage] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -74,6 +77,22 @@ const ImageEnhancer = ({ onClose }: ImageEnhancerProps) => {
     setImage(null);
     setDescription('');
     fileInputRef.current && (fileInputRef.current.value = '');
+  };
+
+  const copyDescription = async () => {
+    try {
+      await navigator.clipboard.writeText(description);
+      toast({
+        title: "Description copied!",
+        duration: 2000
+      });
+    } catch (err) {
+      toast({
+        title: "Failed to copy description",
+        variant: "destructive",
+        duration: 2000
+      });
+    }
   };
 
   return (
@@ -150,18 +169,48 @@ const ImageEnhancer = ({ onClose }: ImageEnhancerProps) => {
                 <p className="text-sm text-[#8E9196]">Supported formats: PNG, JPG, JPEG</p>
               </motion.div>
             ) : (
-              <div className="relative rounded-xl overflow-hidden bg-[#F1F0FB] aspect-square">
+              <div 
+                className="relative rounded-xl overflow-hidden bg-[#F1F0FB] aspect-square group"
+                onMouseEnter={() => setIsHoveringImage(true)}
+                onMouseLeave={() => setIsHoveringImage(false)}
+              >
                 <img 
                   src={image} 
                   alt="Uploaded image"
                   className="w-full h-full object-contain"
                 />
+                {isHoveringImage && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="absolute inset-0 bg-black/50 flex items-center justify-center cursor-pointer"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <div className="text-white flex flex-col items-center">
+                      <Upload className="w-8 h-8 mb-2" />
+                      <span className="text-sm">Upload New Image</span>
+                    </div>
+                  </motion.div>
+                )}
               </div>
             )}
           </div>
           
-          <div className="bg-[#F1F0FB] rounded-xl p-6 min-h-[300px] flex flex-col">
-            <h3 className="text-lg font-medium text-[#1A1F2C] mb-4">Image Description</h3>
+          <div className="bg-[#F1F0FB] rounded-xl p-6 min-h-[300px] flex flex-col relative">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium text-[#1A1F2C]">Image Description</h3>
+              {description && !isProcessing && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={copyDescription}
+                  className="rounded-full hover:bg-white/50"
+                  title="Copy description"
+                >
+                  <Copy className="w-4 h-4 text-[#8E9196]" />
+                </Button>
+              )}
+            </div>
             {isProcessing ? (
               <div className="flex-1 space-y-3">
                 <div className="animate-pulse h-4 bg-[#E5DEFF] rounded w-3/4"></div>

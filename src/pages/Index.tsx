@@ -18,12 +18,9 @@ const Index = () => {
         <h1 className="text-4xl md:text-5xl font-bold text-[#1A1F2C] mb-4">
           ImageSense
         </h1>
-        <h2 className="text-xl md:text-2xl text-[#1A1F2C]/80 mb-6">
+        <h2 className="text-xl md:text-2xl text-[#1A1F2C]/80 mb-8">
           Instant Image Analysis & Smart Descriptions
         </h2>
-        <p className="text-[#8E9196] mb-8 max-w-2xl mx-auto">
-          Upload any image and let our AI-powered tool generate detailed, accurate, and meaningful descriptions in seconds
-        </p>
 
         <motion.div
           whileHover={{ scale: 1.02 }}
