@@ -31,18 +31,18 @@ serve(async (req) => {
       )
     }
 
-    console.log("Analyzing image with BLIP...")
+    console.log("Analyzing image with BLIP-3...")
     const output = await replicate.run(
-      "salesforce/blip:2e1dddc8621f72155f24cf2e0adbde548458d3cab9f00c0139eea840d0ac4746",
+      "zsxkib/blip-3:b91c0f27a3da67d3f0dcb765537a46c48462775ad541ea671a7c1b46e15b00e6",
       {
         input: {
           image: image,
-          task: "image_captioning"
+          question: "Describe this image in detail."
         }
       }
     )
 
-    console.log("BLIP analysis result:", output)
+    console.log("BLIP-3 analysis result:", output)
     return new Response(
       JSON.stringify({ description: output }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
