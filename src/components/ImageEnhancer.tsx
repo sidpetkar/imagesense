@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { X, Upload, Copy } from 'lucide-react';
+import { X, Upload, Copy, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -127,7 +127,7 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className={`rounded-2xl shadow-2xl w-full max-w-5xl mx-auto ${
+        className={`rounded-2xl shadow-2xl w-full max-w-5xl mx-auto h-[90vh] flex flex-col ${
           isDark ? 'bg-[#0D1116] border border-[#1E2833]' : 'bg-white border border-[#EAEAEB]'
         }`}
         onClick={e => e.stopPropagation()}
@@ -140,7 +140,7 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
           }`}>
             Image Analysis
           </h2>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             {image && (
               <Button
                 variant="ghost"
@@ -149,11 +149,12 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
                   setDescription('');
                   fileInputRef.current && (fileInputRef.current.value = '');
                 }}
-                className={`rounded-full ${
+                className={`rounded-full flex items-center gap-2 ${
                   isDark ? 'hover:bg-[#1E2833] text-white/60' : 'hover:bg-[#F4F4F5] text-[#8E9196]'
                 }`}
               >
-                Try Another
+                <RotateCcw className="w-4 h-4" />
+                Try New
               </Button>
             )}
             <Button
@@ -171,15 +172,13 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 p-6 max-h-[80vh] overflow-hidden">
-          <div className="flex flex-col">
+        <div className="grid md:grid-cols-2 gap-6 p-6 flex-1 overflow-hidden">
+          <div className={`rounded-xl flex flex-col ${
+            isDark ? 'bg-[#131920] border border-[#1E2833]' : 'bg-[#F4F4F5] border border-[#EAEAEB]'
+          }`}>
             {!image ? (
               <motion.div
-                className={`border-2 border-dashed rounded-xl p-10 text-center transition-colors h-full flex flex-col items-center justify-center ${
-                  isDark
-                    ? `border-[#1E2833] ${isDragging ? 'bg-[#131920] border-[#263240]' : ''}`
-                    : `border-[#EAEAEB] ${isDragging ? 'bg-[#F4F4F5] border-[#D4D4D6]' : ''}`
-                }`}
+                className="border-2 border-dashed rounded-xl p-10 text-center transition-colors flex-1 flex flex-col items-center justify-center"
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
@@ -216,9 +215,7 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
               </motion.div>
             ) : (
               <div 
-                className={`relative rounded-xl overflow-hidden aspect-square group ${
-                  isDark ? 'bg-[#131920]' : 'bg-[#F4F4F5]'
-                }`}
+                className="relative flex-1"
                 onMouseEnter={() => setIsHoveringImage(true)}
                 onMouseLeave={() => setIsHoveringImage(false)}
               >
@@ -244,12 +241,11 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
             )}
           </div>
           
-          <div className={`rounded-xl p-6 overflow-y-auto ${
+          <div className={`rounded-xl flex flex-col ${
             isDark ? 'bg-[#131920] border border-[#1E2833]' : 'bg-[#F4F4F5] border border-[#EAEAEB]'
-          }`}
-          style={{ maxHeight: 'calc(80vh - 140px)' }}>
-            <div className="flex justify-between items-center mb-4 sticky top-0 bg-inherit py-2">
-              <h3 className={`text-lg font-medium text-left ${
+          }`}>
+            <div className="flex justify-between items-center p-6 border-b sticky top-0 bg-inherit z-10">
+              <h3 className={`text-lg font-medium ${
                 isDark ? 'text-white' : 'text-[#1A1F2C]'
               }`}>
                 Image Description
@@ -270,21 +266,23 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
                 </Button>
               )}
             </div>
-            {isProcessing ? (
-              <SkeletonLoader />
-            ) : description ? (
-              <p className={`whitespace-pre-line ${
-                isDark ? 'text-white/90' : 'text-[#1A1F2C]'
-              }`}>
-                {description}
-              </p>
-            ) : (
-              <div className={`flex items-center justify-center h-full min-h-[200px] ${
-                isDark ? 'text-white/60' : 'text-[#8E9196]'
-              }`}>
-                Upload an image to see its description
-              </div>
-            )}
+            <div className="flex-1 overflow-y-auto p-6 pt-0">
+              {isProcessing ? (
+                <SkeletonLoader />
+              ) : description ? (
+                <p className={`whitespace-pre-line text-left ${
+                  isDark ? 'text-white/90' : 'text-[#1A1F2C]'
+                }`}>
+                  {description}
+                </p>
+              ) : (
+                <div className={`flex items-center justify-center h-full ${
+                  isDark ? 'text-white/60' : 'text-[#8E9196]'
+                }`}>
+                  Upload an image to see its description
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </motion.div>
