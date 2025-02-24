@@ -47,17 +47,21 @@ const Index = () => {
         </h2>
 
         <motion.div
-          whileHover={{ scale: 1.02 }}
+          whileHover={{ 
+            scale: 1.02,
+            rotate: 1,
+            transition: { duration: 0.3 }
+          }}
           whileTap={{ scale: 0.98 }}
-          className={`border-2 border-dashed rounded-xl p-10 text-center transition-colors cursor-pointer ${
+          className={`border-2 border-dashed rounded-xl p-10 text-center transition-all duration-300 cursor-pointer backdrop-blur-sm ${
             isDark 
-              ? 'border-[#1E2833] hover:border-[#263240] hover:bg-[#131920]'
-              : 'border-[#EAEAEB] hover:border-[#D4D4D6] hover:bg-[#F4F4F5]'
+              ? 'border-[#9b87f5] bg-white/5 hover:bg-white/10 hover:border-[#7E69AB] shadow-lg shadow-[#9b87f5]/10'
+              : 'border-[#9b87f5] bg-white hover:bg-[#F1F0FB] hover:border-[#7E69AB] shadow-lg'
           }`}
           onClick={() => setIsModalOpen(true)}
         >
           <Upload className={`w-12 h-12 mx-auto mb-6 ${
-            isDark ? 'text-[#D4D4D6]' : 'text-[#8E9196]'
+            isDark ? 'text-[#9b87f5]' : 'text-[#9b87f5]'
           }`} />
           <p className={`mb-3 text-lg ${
             isDark ? 'text-white' : 'text-[#1A1F2C]'

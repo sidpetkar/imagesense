@@ -1,7 +1,6 @@
-
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { X, Upload, RotateCcw, Copy } from 'lucide-react';
+import { X, Upload, Copy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -98,16 +97,16 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
 
   const SkeletonLoader = () => (
     <div className="space-y-3 animate-pulse">
-      <div className={`h-4 ${isDark ? 'bg-[#1E2833]' : 'bg-[#EAEAEB]'} rounded w-full`} />
-      <div className={`h-4 ${isDark ? 'bg-[#1E2833]' : 'bg-[#EAEAEB]'} rounded w-5/6`} />
-      <div className={`h-4 ${isDark ? 'bg-[#1E2833]' : 'bg-[#EAEAEB]'} rounded w-4/5`} />
+      <div className={`h-4 ${isDark ? 'bg-[#1E2833]' : 'bg-[#EAEAEB]'} rounded w-full animate-shimmer`} />
+      <div className={`h-4 ${isDark ? 'bg-[#1E2833]' : 'bg-[#EAEAEB]'} rounded w-5/6 animate-shimmer`} />
+      <div className={`h-4 ${isDark ? 'bg-[#1E2833]' : 'bg-[#EAEAEB]'} rounded w-4/5 animate-shimmer`} />
       <div className="space-y-2">
-        <div className={`h-3 ${isDark ? 'bg-[#1E2833]' : 'bg-[#EAEAEB]'} rounded w-3/4`} />
-        <div className={`h-3 ${isDark ? 'bg-[#1E2833]' : 'bg-[#EAEAEB]'} rounded w-2/3`} />
+        <div className={`h-3 ${isDark ? 'bg-[#1E2833]' : 'bg-[#EAEAEB]'} rounded w-3/4 animate-shimmer`} />
+        <div className={`h-3 ${isDark ? 'bg-[#1E2833]' : 'bg-[#EAEAEB]'} rounded w-2/3 animate-shimmer`} />
       </div>
       <div className="space-y-2">
-        <div className={`h-3 ${isDark ? 'bg-[#1E2833]' : 'bg-[#EAEAEB]'} rounded w-5/6`} />
-        <div className={`h-3 ${isDark ? 'bg-[#1E2833]' : 'bg-[#EAEAEB]'} rounded w-3/4`} />
+        <div className={`h-3 ${isDark ? 'bg-[#1E2833]' : 'bg-[#EAEAEB]'} rounded w-5/6 animate-shimmer`} />
+        <div className={`h-3 ${isDark ? 'bg-[#1E2833]' : 'bg-[#EAEAEB]'} rounded w-3/4 animate-shimmer`} />
       </div>
     </div>
   );
@@ -129,7 +128,7 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
         exit={{ scale: 0.95, opacity: 0 }}
         transition={{ duration: 0.2 }}
         className={`rounded-2xl shadow-2xl w-full max-w-5xl mx-auto ${
-          isDark ? 'bg-[#0D1116]' : 'bg-white'
+          isDark ? 'bg-[#0D1116] border border-[#1E2833]' : 'bg-white border border-[#EAEAEB]'
         }`}
         onClick={e => e.stopPropagation()}
       >
@@ -145,20 +144,16 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
             {image && (
               <Button
                 variant="ghost"
-                size="icon"
                 onClick={() => {
                   setImage(null);
                   setDescription('');
                   fileInputRef.current && (fileInputRef.current.value = '');
                 }}
                 className={`rounded-full ${
-                  isDark ? 'hover:bg-[#1E2833]' : 'hover:bg-[#F4F4F5]'
+                  isDark ? 'hover:bg-[#1E2833] text-white/60' : 'hover:bg-[#F4F4F5] text-[#8E9196]'
                 }`}
-                title="Try Another"
               >
-                <RotateCcw className={`w-5 h-5 ${
-                  isDark ? 'text-white/60' : 'text-[#8E9196]'
-                }`} />
+                Try Another
               </Button>
             )}
             <Button
@@ -176,7 +171,7 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 p-6">
+        <div className="grid md:grid-cols-2 gap-6 p-6 max-h-[80vh] overflow-hidden">
           <div className="flex flex-col">
             {!image ? (
               <motion.div
@@ -249,10 +244,11 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
             )}
           </div>
           
-          <div className={`rounded-xl p-6 min-h-[300px] flex flex-col relative ${
-            isDark ? 'bg-[#131920]' : 'bg-[#F4F4F5]'
-          }`}>
-            <div className="flex justify-between items-center mb-4">
+          <div className={`rounded-xl p-6 overflow-y-auto ${
+            isDark ? 'bg-[#131920] border border-[#1E2833]' : 'bg-[#F4F4F5] border border-[#EAEAEB]'
+          }`}
+          style={{ maxHeight: 'calc(80vh - 140px)' }}>
+            <div className="flex justify-between items-center mb-4 sticky top-0 bg-inherit py-2">
               <h3 className={`text-lg font-medium text-left ${
                 isDark ? 'text-white' : 'text-[#1A1F2C]'
               }`}>
@@ -277,13 +273,13 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
             {isProcessing ? (
               <SkeletonLoader />
             ) : description ? (
-              <p className={`whitespace-pre-line flex-1 text-left ${
+              <p className={`whitespace-pre-line ${
                 isDark ? 'text-white/90' : 'text-[#1A1F2C]'
               }`}>
                 {description}
               </p>
             ) : (
-              <div className={`flex items-center justify-center flex-1 ${
+              <div className={`flex items-center justify-center h-full min-h-[200px] ${
                 isDark ? 'text-white/60' : 'text-[#8E9196]'
               }`}>
                 Upload an image to see its description
