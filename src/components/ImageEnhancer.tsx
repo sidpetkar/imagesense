@@ -108,7 +108,7 @@ const ImageEnhancer = ({
       duration: 0.2
     }} className="w-full max-w-5xl bg-card rounded-lg border shadow-lg overflow-hidden my-4 md:my-0" onClick={e => e.stopPropagation()}>
         <div className="flex justify-between items-center py-4 px-6 border-b">
-          <h2 className="text-2xl font-semibold text-card-foreground">
+          <h2 className="font-semibold text-card-foreground text-xl">
             Image Analysis
           </h2>
           <div className="flex gap-2 items-center">
