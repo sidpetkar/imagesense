@@ -116,7 +116,7 @@ const ImageEnhancer = ({
               setImage(null);
               setDescription('');
               fileInputRef.current && (fileInputRef.current.value = '');
-            }} className="rounded-full" size="sm">
+            }} size="sm" className="rounded-full text-xs">
                   <RotateCcw className="w-4 h-4 mr-2" />
                   Try New
                 </Button>}
