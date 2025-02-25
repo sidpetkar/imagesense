@@ -93,7 +93,7 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
 
   return (
     <div className="fixed inset-0 z-50">
-      <div className="fixed inset-0 bg-background/80 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <motion.div
           initial={{ scale: 0.95, opacity: 0 }}
@@ -162,27 +162,34 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
                 </motion.button>
               ) : (
                 <div 
-                  className="relative h-full"
+                  className="relative h-full cursor-pointer"
                   onMouseEnter={() => setIsHoveringImage(true)}
                   onMouseLeave={() => setIsHoveringImage(false)}
+                  onClick={() => fileInputRef.current?.click()}
                 >
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileSelect}
+                    className="hidden"
+                    accept="image/*"
+                  />
                   <img 
                     src={image} 
                     alt="Uploaded image"
                     className="w-full h-full object-contain"
                   />
                   {isHoveringImage && (
-                    <motion.button
+                    <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="absolute inset-0 bg-black/50 flex items-center justify-center cursor-pointer"
-                      onClick={() => fileInputRef.current?.click()}
+                      className="absolute inset-0 bg-black/50 flex items-center justify-center"
                     >
                       <div className="text-white flex flex-col items-center">
                         <Upload className="w-8 h-8 mb-2" />
                         <span className="text-sm">Upload New Image</span>
                       </div>
-                    </motion.button>
+                    </motion.div>
                   )}
                 </div>
               )}

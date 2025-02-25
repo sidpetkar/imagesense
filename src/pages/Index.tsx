@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, Sun, Moon } from 'lucide-react';
@@ -45,11 +44,7 @@ const Index = () => {
         </div>
 
         <motion.div
-          whileHover={{ 
-            scale: 1.02,
-            rotate: 1,
-            transition: { duration: 0.3 }
-          }}
+          whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           className="border-2 border-dashed rounded-xl p-10 text-center transition-all duration-300 cursor-pointer hover:border-primary bg-card"
           onClick={() => setIsModalOpen(true)}
