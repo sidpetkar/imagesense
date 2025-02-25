@@ -10,7 +10,7 @@ const Index = () => {
     isDark,
     toggle
   } = useTheme();
-  return <div className={`min-h-screen flex items-center justify-center px-4 md:px-6 ${isDark ? 'bg-gradient-to-b from-background via-background/80 to-background/60' : 'bg-gradient-to-b from-background via-muted to-muted/80'}`}>
+  return <div className="bg-zinc-950">
       <Button variant="ghost" size="icon" onClick={toggle} className="fixed top-6 right-6 rounded-full">
         {isDark ? <Sun className="h-5 w-5 text-muted-foreground" /> : <Moon className="h-5 w-5 text-muted-foreground" />}
       </Button>
