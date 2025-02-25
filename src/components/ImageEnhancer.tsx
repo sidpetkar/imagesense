@@ -186,9 +186,7 @@ const ImageEnhancer = ({
                 }}>
                         <TypewriterText text={description} />
                       </motion.div>}
-                  </AnimatePresence> : <div className="flex items-center justify-center h-full text-muted-foreground">
-                    Upload an image to see its description
-                  </div>}
+                  </AnimatePresence> : <div className="flex items-center justify-center h-full text-muted-foreground"></div>}
               </div>
             </div>
           </div>
