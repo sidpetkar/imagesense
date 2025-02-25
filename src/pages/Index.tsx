@@ -46,7 +46,7 @@ const Index = () => {
         <motion.div
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="border-2 border-dashed rounded-xl p-10 text-center transition-all duration-300 cursor-pointer hover:border-primary bg-card"
+          className="border-2 border-dashed rounded-xl p-10 text-center transition-all duration-300 cursor-pointer hover:border-muted-foreground bg-card"
           onClick={() => setIsModalOpen(true)}
         >
           <Upload className="w-12 h-12 mx-auto mb-6 text-muted-foreground" />

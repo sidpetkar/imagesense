@@ -15,7 +15,7 @@ const TypewriterText = ({ text }: TypewriterTextProps) => {
       const timeout = setTimeout(() => {
         setDisplayedText(prev => prev + text[currentIndex]);
         setCurrentIndex(prev => prev + 1);
-      }, 30); // Adjust speed here
+      }, 15); // Increased typing speed (reduced from 30ms to 15ms)
 
       return () => clearTimeout(timeout);
     }

@@ -5,10 +5,12 @@ import { Button } from '@/components/ui/button';
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import TypewriterText from './TypewriterText';
+
 interface ImageEnhancerProps {
   onClose: () => void;
   isDark: boolean;
 }
+
 const ImageEnhancer = ({
   onClose,
   isDark
@@ -23,13 +25,16 @@ const ImageEnhancer = ({
   const {
     toast
   } = useToast();
+
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(true);
   };
+
   const handleDragLeave = () => {
     setIsDragging(false);
   };
+
   const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
@@ -38,11 +43,13 @@ const ImageEnhancer = ({
       await processImage(file);
     }
   };
+
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       await processImage(e.target.files[0]);
     }
   };
+
   const processImage = async (file: File) => {
     setIsProcessing(true);
     setDescription('');
@@ -77,6 +84,7 @@ const ImageEnhancer = ({
       setIsProcessing(false);
     }
   };
+
   const copyDescription = async () => {
     try {
       await navigator.clipboard.writeText(description);
@@ -92,31 +100,33 @@ const ImageEnhancer = ({
       });
     }
   };
-  return <div className="fixed inset-0 z-50">
+
+  return (
+    <div className="fixed inset-0 z-50">
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <motion.div initial={{
-        scale: 0.95,
-        opacity: 0
-      }} animate={{
-        scale: 1,
-        opacity: 1
-      }} exit={{
-        scale: 0.95,
-        opacity: 0
-      }} transition={{
-        duration: 0.2
-      }} className="w-full max-w-5xl bg-card rounded-lg border shadow-lg relative" onClick={e => e.stopPropagation()}>
+          scale: 0.95,
+          opacity: 0
+        }} animate={{
+          scale: 1,
+          opacity: 1
+        }} exit={{
+          scale: 0.95,
+          opacity: 0
+        }} transition={{
+          duration: 0.2
+        }} className="w-full max-w-5xl bg-card rounded-lg border shadow-lg relative" onClick={e => e.stopPropagation()}>
           <div className="flex justify-between items-center py-4 px-6 border-b">
             <h2 className="font-semibold text-card-foreground text-xl">
               Image Analysis
             </h2>
             <div className="flex gap-2 items-center">
               {image && <Button variant="ghost" onClick={() => {
-              setImage(null);
-              setDescription('');
-              fileInputRef.current && (fileInputRef.current.value = '');
-            }} className="rounded-full" size="sm">
+                setImage(null);
+                setDescription('');
+                fileInputRef.current && (fileInputRef.current.value = '');
+              }} className="rounded-full" size="sm">
                   <RotateCcw className="w-4 h-4 mr-2" />
                   Try New
                 </Button>}
@@ -158,40 +168,96 @@ const ImageEnhancer = ({
             </div>
             
             <div className="bg-muted rounded-lg flex flex-col h-[300px] md:h-[400px]">
-              <div className="flex justify-between items-center py-3 px-6 border-b bg-muted sticky top-0 z-10 rounded-lg">
+              <div className="flex justify-between items-center py-3 px-6 border-b bg-muted sticky top-0 z-10 rounded-t-lg">
                 <h3 className="font-medium text-card-foreground">
-                  Image Description
+                  Description
                 </h3>
-                {description && !isProcessing && <Button variant="ghost" size="icon" onClick={copyDescription} className="rounded-full" title="Copy description">
+                {description && !isProcessing && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={copyDescription}
+                    className="rounded-full"
+                    title="Copy description"
+                  >
                     <Copy className="w-4 h-4" />
-                  </Button>}
+                  </Button>
+                )}
               </div>
               <div className="flex-1 overflow-y-auto p-6">
-                {isProcessing ? <motion.div initial={{
-                opacity: 0
-              }} animate={{
-                opacity: 1
-              }} exit={{
-                opacity: 0
-              }} className="flex flex-col items-center justify-center h-full space-y-4">
-                    <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                {isProcessing ? (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="flex flex-col items-center justify-center h-full space-y-4"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <motion.div
+                        animate={{
+                          scale: [1, 1.2, 1],
+                          opacity: [1, 0.5, 1]
+                        }}
+                        transition={{
+                          duration: 1,
+                          repeat: Infinity,
+                          repeatDelay: 0.2
+                        }}
+                        className="w-2 h-2 rounded-full bg-primary"
+                      />
+                      <motion.div
+                        animate={{
+                          scale: [1, 1.2, 1],
+                          opacity: [1, 0.5, 1]
+                        }}
+                        transition={{
+                          duration: 1,
+                          repeat: Infinity,
+                          repeatDelay: 0.2,
+                          delay: 0.2
+                        }}
+                        className="w-2 h-2 rounded-full bg-primary"
+                      />
+                      <motion.div
+                        animate={{
+                          scale: [1, 1.2, 1],
+                          opacity: [1, 0.5, 1]
+                        }}
+                        transition={{
+                          duration: 1,
+                          repeat: Infinity,
+                          repeatDelay: 0.2,
+                          delay: 0.4
+                        }}
+                        className="w-2 h-2 rounded-full bg-primary"
+                      />
+                    </div>
                     <p className="text-muted-foreground">Taking a look at your image...</p>
-                  </motion.div> : description ? <AnimatePresence mode="wait">
+                  </motion.div>
+                ) : description ? (
+                  <AnimatePresence mode="wait">
                     {showTypewriter && <motion.div initial={{
-                  opacity: 0
-                }} animate={{
-                  opacity: 1
-                }} exit={{
-                  opacity: 0
-                }}>
-                        <TypewriterText text={description} />
-                      </motion.div>}
-                  </AnimatePresence> : <div className="flex items-center justify-center h-full text-muted-foreground"></div>}
+                      opacity: 0
+                    }} animate={{
+                      opacity: 1
+                    }} exit={{
+                      opacity: 0
+                    }}>
+                      <TypewriterText text={description} />
+                    </motion.div>}
+                  </AnimatePresence>
+                ) : (
+                  <div className="flex items-center justify-center h-full text-muted-foreground">
+                    Upload an image to see its description
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </motion.div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default ImageEnhancer;
