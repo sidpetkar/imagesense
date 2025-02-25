@@ -132,13 +132,13 @@ const ImageEnhancer = ({
                   <input type="file" ref={fileInputRef} onChange={handleFileSelect} className="hidden" accept="image/*" />
                   
                   <Upload className="w-12 h-12 mx-auto mb-6 text-muted-foreground" />
-                  <p className="mb-3 text-lg text-card-foreground">
+                  <p className="mb-3 text-card-foreground text-base">
                     Drag and drop your image here, or{' '}
                     <span className="underline underline-offset-4 text-primary">
                       browse
                     </span>
                   </p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     Supported formats: PNG, JPG, JPEG
                   </p>
                 </motion.button> : <div className="relative h-full cursor-pointer" onMouseEnter={() => setIsHoveringImage(true)} onMouseLeave={() => setIsHoveringImage(false)} onClick={() => fileInputRef.current?.click()}>
