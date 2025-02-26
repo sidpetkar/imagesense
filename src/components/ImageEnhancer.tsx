@@ -1,7 +1,6 @@
-
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Upload, Copy, RotateCcw } from 'lucide-react';
+import { X, Upload, Copy, RotateCcw, Speaker, SpeakerOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -19,7 +18,10 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isHoveringImage, setIsHoveringImage] = useState(false);
   const [showTypewriter, setShowTypewriter] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   
   const { toast } = useToast();
 
@@ -52,7 +54,8 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
       await navigator.clipboard.writeText(description);
       toast({
         title: "Description copied!",
-        variant: "success",
+        description: "Text copied to clipboard",
+        variant: "default",
         duration: 2000
       });
     } catch (err) {
@@ -61,6 +64,47 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
         variant: "destructive",
         duration: 2000
       });
+    }
+  };
+
+  const handleSpeech = async () => {
+    if (isGeneratingAudio) return;
+
+    if (isSpeaking && audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsSpeaking(false);
+      return;
+    }
+
+    try {
+      if (!audioRef.current) {
+        setIsGeneratingAudio(true);
+        const { data, error } = await supabase.functions.invoke('text-to-voice', {
+          body: { text: description }
+        });
+
+        if (error) throw error;
+
+        const audio = new Audio(data.audioUrl);
+        audioRef.current = audio;
+        
+        audio.addEventListener('ended', () => {
+          setIsSpeaking(false);
+        });
+      }
+
+      await audioRef.current.play();
+      setIsSpeaking(true);
+    } catch (error) {
+      console.error('Error generating speech:', error);
+      toast({
+        title: "Failed to generate speech",
+        variant: "destructive",
+        duration: 2000
+      });
+    } finally {
+      setIsGeneratingAudio(false);
     }
   };
 
@@ -204,15 +248,31 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
                   Description
                 </h3>
                 {description && !isProcessing && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={copyDescription}
-                    className="rounded-full"
-                    title="Copy description"
-                  >
-                    <Copy className="w-4 h-4" />
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleSpeech}
+                      className="rounded-full"
+                      title={isSpeaking ? "Stop speaking" : "Speak description"}
+                      disabled={isGeneratingAudio}
+                    >
+                      {isSpeaking ? (
+                        <SpeakerOff className="w-4 h-4" />
+                      ) : (
+                        <Speaker className="w-4 h-4" />
+                      )}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={copyDescription}
+                      className="rounded-full"
+                      title="Copy description"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                  </div>
                 )}
               </div>
               <div className="flex-1 overflow-y-auto p-6">
