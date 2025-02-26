@@ -78,28 +78,49 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
     }
 
     try {
-      if (!audioRef.current) {
-        setIsGeneratingAudio(true);
-        const { data, error } = await supabase.functions.invoke('text-to-voice', {
-          body: { text: description }
-        });
+      setIsGeneratingAudio(true);
+      const { data, error } = await supabase.functions.invoke('text-to-voice', {
+        body: { text: description }
+      });
 
-        if (error) throw error;
+      if (error) throw error;
+      if (!data?.audioContent) throw new Error('No audio content received');
 
-        const audio = new Audio(data.audioUrl);
-        audioRef.current = audio;
-        
-        audio.addEventListener('ended', () => {
-          setIsSpeaking(false);
-        });
+      const base64Audio = data.audioContent;
+      const audioBlob = await fetch(`data:audio/mp3;base64,${base64Audio}`).then(res => res.blob());
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      if (audioRef.current) {
+        URL.revokeObjectURL(audioRef.current.src);
       }
 
-      await audioRef.current.play();
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+      
+      audio.addEventListener('ended', () => {
+        setIsSpeaking(false);
+        URL.revokeObjectURL(audioUrl);
+      });
+
+      audio.addEventListener('error', (e) => {
+        console.error('Audio playback error:', e);
+        setIsSpeaking(false);
+        setIsGeneratingAudio(false);
+        toast({
+          title: "Failed to play audio",
+          description: "There was an error playing the audio",
+          variant: "destructive",
+          duration: 2000
+        });
+      });
+
+      await audio.play();
       setIsSpeaking(true);
     } catch (error) {
       console.error('Error generating speech:', error);
       toast({
         title: "Failed to generate speech",
+        description: error instanceof Error ? error.message : "An error occurred",
         variant: "destructive",
         duration: 2000
       });

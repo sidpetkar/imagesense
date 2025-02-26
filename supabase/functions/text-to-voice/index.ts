@@ -1,6 +1,6 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import Replicate from 'https://esm.sh/replicate@0.25.2'
+import OpenAI from 'https://esm.sh/openai@4.20.1'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -19,28 +19,42 @@ serve(async (req) => {
       throw new Error('Text is required')
     }
 
-    const replicate = new Replicate({
-      auth: Deno.env.get('REPLICATE_API_KEY'),
+    const openai = new OpenAI({
+      apiKey: Deno.env.get('OPENAI_API_KEY'),
     })
 
-    const output = await replicate.run(
-      "jaaari/kokoro-82m",
-      {
-        input: {
-          text: text,
-          voice: "us_bella",
-          speed: 1
-        }
-      }
+    const response = await fetch('https://api.openai.com/v1/audio/speech', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${Deno.env.get('OPENAI_API_KEY')}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'tts-1',
+        input: text,
+        voice: 'alloy',
+        response_format: 'mp3',
+      }),
+    })
+
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.error?.message || 'Failed to generate speech')
+    }
+
+    const arrayBuffer = await response.arrayBuffer()
+    const base64Audio = btoa(
+      String.fromCharCode(...new Uint8Array(arrayBuffer))
     )
 
     return new Response(
-      JSON.stringify({ audioUrl: output }),
+      JSON.stringify({ audioContent: base64Audio }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       },
     )
   } catch (error) {
+    console.error('Text-to-voice error:', error)
     return new Response(
       JSON.stringify({ error: error.message }),
       {
