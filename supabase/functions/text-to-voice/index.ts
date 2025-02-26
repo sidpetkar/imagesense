@@ -23,16 +23,24 @@ serve(async (req) => {
       auth: Deno.env.get('REPLICATE_API_KEY'),
     })
 
+    console.log('Generating speech for text:', text)
+
     const output = await replicate.run(
-      "jaaari/kokoro-82m",
+      "suno-ai/bark",
       {
         input: {
           text: text,
-          voice: "us_bella",
-          speed: 1
+          history_prompt: "v2/en_speaker_6",
+          sample_rate: 24000
         }
       }
     )
+
+    if (!output) {
+      throw new Error('No audio output generated')
+    }
+
+    console.log('Speech generation successful, output:', output)
 
     return new Response(
       JSON.stringify({ audioContent: output }),
