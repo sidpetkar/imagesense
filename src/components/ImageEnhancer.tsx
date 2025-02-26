@@ -1,7 +1,6 @@
-
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Upload, Copy, RotateCcw, Speaker, SpeakerOff } from 'lucide-react';
+import { X, Upload, Copy, RotateCcw, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -259,9 +258,9 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
                       disabled={isGeneratingAudio}
                     >
                       {isSpeaking ? (
-                        <SpeakerOff className="w-4 h-4" />
+                        <VolumeX className="w-4 h-4" />
                       ) : (
-                        <Speaker className="w-4 h-4" />
+                        <Volume2 className="w-4 h-4" />
                       )}
                     </Button>
                     <Button
