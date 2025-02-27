@@ -30,13 +30,14 @@ serve(async (req) => {
       {
         input: {
           text: text,
-          voice: "af_bella",
+          voice: "af_nicole",
         }
       }
     )
 
     console.log('Audio generation completed, output URL:', output)
 
+    // Simply return the audio URL instead of converting to base64
     return new Response(
       JSON.stringify({ audioUrl: output }),
       {
