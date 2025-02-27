@@ -19,31 +19,31 @@ serve(async (req) => {
       throw new Error('Text is required')
     }
 
+    console.log('Starting text-to-speech generation for:', text)
+
     const replicate = new Replicate({
       auth: Deno.env.get('REPLICATE_API_KEY'),
     })
 
-    console.log('Generating speech for text:', text)
-
     const output = await replicate.run(
-      "suno-ai/bark",
+      "jaaari/kokoro-82m:f559560eb822dc509045f3921a1921234918b91739db4bf3daab2169b71c7a13",
       {
         input: {
           text: text,
-          history_prompt: "v2/en_speaker_6",
-          sample_rate: 24000
+          voice: "af_nicole",
         }
       }
     )
 
-    if (!output) {
-      throw new Error('No audio output generated')
-    }
+    console.log('Audio generation completed, output URL:', output)
 
-    console.log('Speech generation successful, output:', output)
+    // Fetch the audio file and convert it to base64
+    const audioResponse = await fetch(output)
+    const arrayBuffer = await audioResponse.arrayBuffer()
+    const base64Audio = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)))
 
     return new Response(
-      JSON.stringify({ audioContent: output }),
+      JSON.stringify({ audioContent: base64Audio }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       },

@@ -79,15 +79,25 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
 
     try {
       setIsGeneratingAudio(true);
+      console.log('Sending text to speech generation:', description);
+
       const { data, error } = await supabase.functions.invoke('text-to-voice', {
         body: { text: description }
       });
 
-      if (error) throw error;
-      if (!data?.audioContent) throw new Error('No audio content received');
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw error;
+      }
 
-      const base64Audio = data.audioContent;
-      const audioBlob = await fetch(`data:audio/mp3;base64,${base64Audio}`).then(res => res.blob());
+      if (!data?.audioContent) {
+        console.error('No audio content in response');
+        throw new Error('No audio content received');
+      }
+
+      console.log('Audio content received, creating audio element');
+
+      const audioBlob = await fetch(`data:audio/wav;base64,${data.audioContent}`).then(res => res.blob());
       const audioUrl = URL.createObjectURL(audioBlob);
 
       if (audioRef.current) {
@@ -98,6 +108,7 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
       audioRef.current = audio;
       
       audio.addEventListener('ended', () => {
+        console.log('Audio playback ended');
         setIsSpeaking(false);
         URL.revokeObjectURL(audioUrl);
       });
@@ -114,10 +125,11 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
         });
       });
 
+      console.log('Starting audio playback');
       await audio.play();
       setIsSpeaking(true);
     } catch (error) {
-      console.error('Error generating speech:', error);
+      console.error('Error in handleSpeech:', error);
       toast({
         title: "Failed to generate speech",
         description: error instanceof Error ? error.message : "An error occurred",
