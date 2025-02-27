@@ -37,13 +37,9 @@ serve(async (req) => {
 
     console.log('Audio generation completed, output URL:', output)
 
-    // Fetch the audio file and convert it to base64
-    const audioResponse = await fetch(output)
-    const arrayBuffer = await audioResponse.arrayBuffer()
-    const base64Audio = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)))
-
+    // Simply return the audio URL instead of converting to base64
     return new Response(
-      JSON.stringify({ audioContent: base64Audio }),
+      JSON.stringify({ audioUrl: output }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       },

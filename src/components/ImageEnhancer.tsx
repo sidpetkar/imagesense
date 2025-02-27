@@ -25,6 +25,78 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
   
   const { toast } = useToast();
 
+  const handleSpeech = async () => {
+    if (isGeneratingAudio) return;
+
+    if (isSpeaking && audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsSpeaking(false);
+      return;
+    }
+
+    try {
+      setIsGeneratingAudio(true);
+      console.log('Sending text to speech generation:', description);
+
+      const { data, error } = await supabase.functions.invoke('text-to-voice', {
+        body: { text: description }
+      });
+
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw error;
+      }
+
+      if (!data?.audioUrl) {
+        console.error('No audio URL in response');
+        throw new Error('No audio URL received');
+      }
+
+      console.log('Audio URL received:', data.audioUrl);
+
+      // Clean up previous audio if it exists
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
+      }
+
+      const audio = new Audio(data.audioUrl);
+      audioRef.current = audio;
+      
+      audio.addEventListener('ended', () => {
+        console.log('Audio playback ended');
+        setIsSpeaking(false);
+      });
+
+      audio.addEventListener('error', (e) => {
+        console.error('Audio playback error:', e);
+        setIsSpeaking(false);
+        setIsGeneratingAudio(false);
+        toast({
+          title: "Failed to play audio",
+          description: "There was an error playing the audio",
+          variant: "destructive",
+          duration: 2000
+        });
+      });
+
+      console.log('Starting audio playback');
+      await audio.play();
+      setIsSpeaking(true);
+    } catch (error) {
+      console.error('Error in handleSpeech:', error);
+      toast({
+        title: "Failed to generate speech",
+        description: error instanceof Error ? error.message : "An error occurred",
+        variant: "destructive",
+        duration: 2000
+      });
+    } finally {
+      setIsGeneratingAudio(false);
+    }
+  };
+
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(true);
@@ -64,80 +136,6 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
         variant: "destructive",
         duration: 2000
       });
-    }
-  };
-
-  const handleSpeech = async () => {
-    if (isGeneratingAudio) return;
-
-    if (isSpeaking && audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      setIsSpeaking(false);
-      return;
-    }
-
-    try {
-      setIsGeneratingAudio(true);
-      console.log('Sending text to speech generation:', description);
-
-      const { data, error } = await supabase.functions.invoke('text-to-voice', {
-        body: { text: description }
-      });
-
-      if (error) {
-        console.error('Supabase function error:', error);
-        throw error;
-      }
-
-      if (!data?.audioContent) {
-        console.error('No audio content in response');
-        throw new Error('No audio content received');
-      }
-
-      console.log('Audio content received, creating audio element');
-
-      const audioBlob = await fetch(`data:audio/wav;base64,${data.audioContent}`).then(res => res.blob());
-      const audioUrl = URL.createObjectURL(audioBlob);
-
-      if (audioRef.current) {
-        URL.revokeObjectURL(audioRef.current.src);
-      }
-
-      const audio = new Audio(audioUrl);
-      audioRef.current = audio;
-      
-      audio.addEventListener('ended', () => {
-        console.log('Audio playback ended');
-        setIsSpeaking(false);
-        URL.revokeObjectURL(audioUrl);
-      });
-
-      audio.addEventListener('error', (e) => {
-        console.error('Audio playback error:', e);
-        setIsSpeaking(false);
-        setIsGeneratingAudio(false);
-        toast({
-          title: "Failed to play audio",
-          description: "There was an error playing the audio",
-          variant: "destructive",
-          duration: 2000
-        });
-      });
-
-      console.log('Starting audio playback');
-      await audio.play();
-      setIsSpeaking(true);
-    } catch (error) {
-      console.error('Error in handleSpeech:', error);
-      toast({
-        title: "Failed to generate speech",
-        description: error instanceof Error ? error.message : "An error occurred",
-        variant: "destructive",
-        duration: 2000
-      });
-    } finally {
-      setIsGeneratingAudio(false);
     }
   };
 
