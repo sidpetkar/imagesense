@@ -26,6 +26,10 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
   
   const { toast } = useToast();
 
+  const toggleMaximize = () => {
+    setIsMaximized(prev => !prev);
+  };
+
   const handleSpeech = async () => {
     if (isGeneratingAudio) return;
 
@@ -168,10 +172,6 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
     } finally {
       setIsProcessing(false);
     }
-  };
-
-  const toggleMaximize = () => {
-    setIsMaximized(prev => !prev);
   };
 
   return (
