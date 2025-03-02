@@ -5,6 +5,7 @@
 
 @layer base {
   :root {
+    /* Light mode - Atlassian design system tokens */
     --background: #FFFFFF;
     --foreground: #172B4D;
     --card: #FFFFFF;
@@ -28,24 +29,25 @@
   }
  
   .dark {
-    --background: #1B2638;
-    --foreground: #E6EDFA;
-    --card: #1B2638;
-    --card-foreground: #E6EDFA;
-    --popover: #1B2638;
-    --popover-foreground: #E6EDFA;
+    /* Dark mode - Atlassian design system tokens with improved contrast */
+    --background: #1A1F2C;
+    --foreground: #F4F5F7;
+    --card: #262C3C;
+    --card-foreground: #F4F5F7;
+    --popover: #262C3C;
+    --popover-foreground: #F4F5F7;
     --primary: #4C9AFF;
-    --primary-foreground: #1B2638;
-    --secondary: #2C3E5D;
-    --secondary-foreground: #E6EDFA;
-    --muted: #2C3E5D;
-    --muted-foreground: #9FB0CC;
-    --accent: #2C3E5D;
+    --primary-foreground: #172B4D;
+    --secondary: #344563;
+    --secondary-foreground: #F4F5F7;
+    --muted: #344563;
+    --muted-foreground: #B8C7E0;
+    --accent: #344563;
     --accent-foreground: #4C9AFF;
     --destructive: #FF5630;
-    --destructive-foreground: #1B2638;
-    --border: #2C3E5D;
-    --input: #2C3E5D;
+    --destructive-foreground: #F4F5F7;
+    --border: #344563;
+    --input: #344563;
     --ring: #4C9AFF;
   }
 }

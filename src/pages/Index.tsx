@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, Sun, Moon } from 'lucide-react';
@@ -10,11 +11,7 @@ const Index = () => {
   const { isDark, toggle } = useTheme();
 
   return (
-    <div className={`min-h-screen flex items-center justify-center px-4 md:px-6 ${
-      isDark 
-        ? 'bg-gradient-to-b from-background via-background/80 to-background/60' 
-        : 'bg-gradient-to-b from-background via-muted to-muted/80'
-    }`}>
+    <div className="min-h-screen flex items-center justify-center px-4 md:px-6 bg-background">
       <Button
         variant="ghost"
         size="icon"
