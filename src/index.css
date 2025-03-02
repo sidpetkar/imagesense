@@ -1,4 +1,9 @@
 
+@import '@fontsource/inter-tight/400.css';
+@import '@fontsource/inter-tight/500.css';
+@import '@fontsource/inter-tight/600.css';
+@import '@fontsource/inter-tight/700.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
