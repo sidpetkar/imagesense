@@ -55,11 +55,9 @@ const Index = () => {
           </p>
         </motion.div>
         
-        <AnimatePresence>
-          {isModalOpen && (
-            <ImageEnhancer onClose={() => setIsModalOpen(false)} isDark={isDark} />
-          )}
-        </AnimatePresence>
+        {isModalOpen && (
+          <ImageEnhancer onClose={() => setIsModalOpen(false)} isDark={isDark} />
+        )}
       </motion.div>
     </div>
   );

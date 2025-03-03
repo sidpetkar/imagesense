@@ -1,6 +1,7 @@
+
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Upload, Copy, RotateCcw, Volume2, VolumeX, Maximize2, Minimize2 } from 'lucide-react';
+import { X, Upload, Copy, RotateCcw, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -21,18 +22,11 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
   const [showTypewriter, setShowTypewriter] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
-  const [isMaximized, setIsMaximized] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const isMobile = useMediaQuery('(max-width: 768px)');
   
   const { toast } = useToast();
-
-  useState(() => {
-    if (isMobile) {
-      setIsMaximized(true);
-    }
-  });
 
   const handleSpeech = async () => {
     if (isGeneratingAudio) return;
@@ -180,30 +174,12 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
     }
   };
 
-  const toggleMaximize = () => {
-    setIsMaximized(prev => !prev);
-  };
-
   return (
     <div className="fixed inset-0 z-50">
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className="fixed inset-0 flex items-center justify-center p-4">
-        <motion.div
-          initial={{ scale: 0.95, opacity: 0 }}
-          animate={{ 
-            scale: 1, 
-            opacity: 1,
-            width: isMaximized ? '100%' : 'auto',
-            height: isMaximized ? '100%' : 'auto',
-            maxWidth: isMaximized ? '100%' : '5xl',
-            margin: isMaximized ? '0' : 'auto',
-            borderRadius: isMaximized ? '0' : '0.5rem',
-          }}
-          exit={{ scale: 0.95, opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className={`bg-card rounded-lg border shadow-lg relative flex flex-col ${
-            isMaximized ? 'w-full h-full' : 'w-full max-w-5xl'
-          }`}
+      <div className="fixed inset-0 flex items-center justify-center">
+        <div 
+          className="bg-card w-full h-full max-w-full max-h-full flex flex-col overflow-hidden"
           onClick={e => e.stopPropagation()}
         >
           <div className="flex justify-between items-center py-4 px-6 border-b">
@@ -229,19 +205,6 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={toggleMaximize}
-                className="rounded-full"
-                title={isMaximized ? "Minimize" : "Maximize"}
-              >
-                {isMaximized ? (
-                  <Minimize2 className="w-5 h-5" />
-                ) : (
-                  <Maximize2 className="w-5 h-5" />
-                )}
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
                 onClick={onClose}
                 className="rounded-full"
               >
@@ -250,11 +213,11 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
             </div>
           </div>
 
-          <div className={`grid md:grid-cols-2 gap-6 p-6 ${isMaximized ? 'flex-1 overflow-auto' : 'max-h-[calc(100vh-8rem)] overflow-y-auto'}`}>
-            <div className={`bg-muted rounded-lg overflow-hidden ${isMaximized ? 'h-full min-h-[300px]' : 'h-[300px] md:h-[400px]'}`}>
+          <div className="grid md:grid-cols-2 gap-6 p-6 flex-1 overflow-auto">
+            <div className="bg-muted rounded-lg overflow-hidden h-full min-h-[300px]">
               {!image ? (
-                <motion.button
-                  className="w-full h-full border-2 border-dashed rounded-lg p-10 text-center transition-colors flex flex-col items-center justify-center"
+                <div
+                  className="w-full h-full border-2 border-dashed rounded-lg p-10 text-center flex flex-col items-center justify-center"
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <input
@@ -275,7 +238,7 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
                   <p className="text-muted-foreground text-xs">
                     Supported formats: PNG, JPG, JPEG
                   </p>
-                </motion.button>
+                </div>
               ) : (
                 <div
                   className="relative h-full cursor-pointer"
@@ -311,7 +274,7 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
               )}
             </div>
             
-            <div className={`bg-muted rounded-lg flex flex-col ${isMaximized ? 'h-full min-h-[300px]' : 'h-[300px] md:h-[400px]'}`}>
+            <div className="bg-muted rounded-lg flex flex-col h-full min-h-[300px]">
               <div className="flex justify-between items-center py-3 px-6 border-b bg-muted sticky top-0 z-10 rounded-t-lg">
                 <h3 className="font-medium text-card-foreground">
                   Description
@@ -414,7 +377,7 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );
