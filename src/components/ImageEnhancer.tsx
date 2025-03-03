@@ -45,7 +45,7 @@ const ImageEnhancer = ({ onClose, isDark }: ImageEnhancerProps) => {
       const { data, error } = await supabase.functions.invoke('text-to-voice', {
         body: { 
           text: description,
-          voice: "af_bella"
+          voice: "af_bella" // Explicitly set to af_bella
         }
       });
 

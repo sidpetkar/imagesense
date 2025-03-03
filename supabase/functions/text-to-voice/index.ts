@@ -13,13 +13,14 @@ serve(async (req) => {
   }
 
   try {
-    const { text } = await req.json()
+    const { text, voice } = await req.json()
 
     if (!text) {
       throw new Error('Text is required')
     }
 
     console.log('Starting text-to-speech generation for:', text)
+    console.log('Using voice:', voice || 'af_bella')
 
     const replicate = new Replicate({
       auth: Deno.env.get('REPLICATE_API_KEY'),
@@ -30,14 +31,13 @@ serve(async (req) => {
       {
         input: {
           text: text,
-          voice: "af_nicole",
+          voice: voice || "af_bella", // Use the provided voice or default to af_bella
         }
       }
     )
 
     console.log('Audio generation completed, output URL:', output)
 
-    // Simply return the audio URL instead of converting to base64
     return new Response(
       JSON.stringify({ audioUrl: output }),
       {
