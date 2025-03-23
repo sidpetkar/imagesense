@@ -11,7 +11,7 @@ const Index = () => {
   const { isDark, toggle } = useTheme();
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 md:px-6 bg-background">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 md:px-6 bg-background">
       <Button
         variant="ghost"
         size="icon"
@@ -59,6 +59,17 @@ const Index = () => {
           <ImageEnhancer onClose={() => setIsModalOpen(false)} isDark={isDark} />
         )}
       </motion.div>
+
+      <div className="mt-auto py-6">
+        <a 
+          href="https://x.com/siddhantpetkar" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          Created by @siddhantpetkar
+        </a>
+      </div>
     </div>
   );
 };
